@@ -22,3 +22,6 @@
 ```bash
 git clone https://github.com/kem-git/mincalc.git
 cd mincalc
+npm install
+npm start
+```
