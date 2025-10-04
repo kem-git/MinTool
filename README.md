@@ -17,11 +17,17 @@
 
 ## Installation
 
-1. Clone the repository:
+1. Clone the repository and install the dependencies:
 
 ```bash
 git clone https://github.com/kem-git/mincalc.git
 cd mincalc
 npm install
+```
+
+2. Start the node process
+
+```bash
 npm start
 ```
+
