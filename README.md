@@ -12,8 +12,7 @@
 - Supports keyboard input
 - Calculator operations: `+`, `-`, `*`, `/`, `.`
 - Clear (`C`) and Enter (`=`) buttons
-- Optional tab for testing internet speed (requires `speedtest-net`)
-
+- Optional tab for testing internet speed
 ---
 
 ## Installation
