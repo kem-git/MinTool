@@ -1,75 +1,123 @@
-body{
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: black;
+@font-face {
+    font-family: 'HackFallback';
+    src: local('Hack'), local('Hack Regular'), local('DejaVu Sans Mono');
 }
 
-#calculator{
-    font-family: 'Courier New', Courier, monospace;
-    background-color: black;
-    max-width: 320px;
-    margin: auto;
-    padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.5);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+:root{
+    --bg: #000;
+    --panel: #000;
+    --muted: #111;
+    --accent: #000;
+    --fg: #fff;
 }
 
-#display{
-    width: 100%;
-    padding: 20px;
-    font-size: 2.5rem;
-    text-align: right;
-    border: none;
-    background-color: #000;
-    color: #fff;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    font-family: consolas, monospace;
+html,body{
+    height:100%;
+    margin:0;
+    background:var(--bg);
+    color:var(--fg);
+    font-family: HackFallback, 'Consolas', 'Courier New', monospace;
 }
 
-#buttons {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
-    padding: 5px;
-    width: 100%;
+html, body, #app{height:100%}
+#app{
+    width:100%;
+    height:100%;
+    margin:0;
+    border-radius:0;
+    overflow:hidden;
+    background:var(--panel);
+    box-shadow:none;
+    display:flex;
+    flex-direction:column;
 }
 
-button {
-    width: 55px;
-    height: 55px;
-    border-radius: 7px;
-    background-color: #000;
-    border: 1px solid #1f1f1f;
-    color: white;
-    font-size: 1.5rem;
-    font-weight: normal;
-    cursor: pointer;
-    transition: background 0.2s;
-    grid-column: span 1;
-    font-family: consolas, monospace;
+#app-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:6px 8px;
+    gap:6px;
+    border-bottom:1px solid #111;
 }
 
-button.equals-btn {
-    grid-column: span 4;
-    width: 100%;
-}
+/* allow dragging the frameless window via the header */
+#app-header{ -webkit-app-region: drag }
 
-button:hover {
-    background: hsl(0, 0%, 7%);
-}
+/* interactive elements should not be draggable */
+button, input, textarea, select, label{ -webkit-app-region: no-drag }
 
-button:active {
-    background: hsl(0, 0%, 14%);
+.tab-container{display:flex;align-items:center;gap:6px;flex:1}
+#tabs{display:flex;gap:6px;justify-content:flex-start}
+.tab-btn{
+    background:transparent;
+    border:1px solid transparent;
+    color:var(--fg);
+    padding:4px 8px;
+    border-radius:6px;
+    font-size:12px;
+    cursor:pointer;
 }
+.tab-btn.active{background:#111}
 
-.operator-btn {
-    background-color: #1f1f1f;
+/* close button */
+#close-btn{
+    position:relative;border:none;background:transparent;color:var(--fg);font-size:11px;padding:2px 6px;border-radius:6px;cursor:pointer;transition:background 120ms, color 120ms; -webkit-app-region: no-drag; margin-left:8px;
 }
+#close-btn:hover{background:#8b0000;color:#fff}
 
+#panels{padding:12px;flex:1;box-sizing:border-box;display:flex;flex-direction:column;gap:8px}
+.panel{display:none;height:100%;overflow:hidden}
+.panel.active{display:flex}
+
+/* Calculator */
+#calculator{width:100%;display:flex;flex-direction:column;height:100%;box-sizing:border-box;padding:4px}
+#display{width:100%;box-sizing:border-box;padding:8px 6px;background:transparent;border:none;color:var(--fg);font-size:20px;text-align:right;border-radius:4px;flex:0 0 56px}
+
+/* Buttons grid fills remaining space and rows expand */
+#buttons{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:1fr;gap:6px;margin-top:6px;flex:1;align-items:stretch}
+button{width:100%;height:100%;border-radius:10px;background:transparent;border:1px solid #222;color:var(--fg);font-size:14px;padding:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 120ms, transform 80ms, box-shadow 120ms}
+button.operator-btn{background:#111}
+button.equals-btn{grid-column:span 4;background:#111;color:#fff}
+button:hover{background:#171717;box-shadow:0 4px 12px rgba(255,255,255,0.03)}
+button:active{transform:translateY(1px) scale(0.995);box-shadow:0 2px 6px rgba(255,255,255,0.02)}
+
+/* Notes */
+#panel-notes .panel-inner{display:flex;flex-direction:column;height:100%}
+#notes{flex:1;background:transparent;border:none;color:var(--fg);padding:8px;border-radius:6px;resize:none;overflow:auto}
+.notes-actions{display:flex;justify-content:center;margin-top:12px}
+.notes-actions button{padding:8px 16px;border-radius:8px}
+
+/* Speed test */
+.panel-inner{display:flex;flex-direction:column;gap:10px;height:100%}
+.speed-controls{display:flex;flex-direction:column;gap:8px}
+.speed-controls .row{display:flex;gap:8px;align-items:center}
+.speed-controls input{background:transparent;border:1px solid #222;color:var(--fg);padding:8px;border-radius:8px}
+.speed-stats{display:flex;flex-direction:row;gap:10px;font-size:12px;align-items:center}
+.speed-stats > div{background:#070707;padding:6px 8px;border-radius:6px}
+.speed-stats > div span{font-weight:600}
+.ping-canvas-wrap{width:100%;height:160px}
+#ping-canvas{width:100%;height:100%;background:#000;border:1px solid #111;border-radius:6px}
+#ping-canvas canvas, canvas{display:block}
+
+/* Speed meter */
+.speed-meter{margin-top:8px;display:flex;flex-direction:column;gap:6px}
+.speed-bar{position:relative;height:22px;background:linear-gradient(90deg,#050505,#0b0b0b);border:1px solid #222;border-radius:10px;overflow:hidden}
+.speed-fill{position:absolute;left:0;top:0;bottom:0;width:0%;background:#fff;box-shadow:0 6px 18px rgba(255,255,255,0.04) inset}
+.avg-line{position:absolute;top:-6px;bottom:-6px;width:2px;background:#fff;opacity:0.9;left:50%;box-shadow:0 0 8px rgba(255,255,255,0.06)}
+.speed-info{display:flex;justify-content:space-between;font-size:12px}
+.speed-value{font-weight:700}
+
+/* Time panel */
+.time-panel .clock{font-size:14px;margin-bottom:8px}
+.timers{display:flex;flex-direction:column;gap:8px}
+.stopwatch,.countdown{background:transparent;border:1px solid #111;padding:8px;border-radius:6px}
+.display{font-family:HackFallback,Consolas,monospace;font-size:18px;text-align:center;margin:8px 0}
+.sw-controls button,.cd-controls button{padding:6px 8px;margin-right:6px}
+.cd-inputs input{width:48%;padding:6px;border-radius:4px;border:1px solid #222;background:transparent;color:var(--fg)}
+
+/* Hide scrollbars */
+*{scrollbar-width:none;-ms-overflow-style:none}
+*::-webkit-scrollbar{display:none}
+
+@media (max-width:380px){#app{width:100%}}

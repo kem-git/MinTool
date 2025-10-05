@@ -1,40 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>mincalc</title>
+    <title>MinTool</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div id="app">
+        <header id="app-header">
+            <div class="tab-container">
+                <nav id="tabs">
+                    <button class="tab-btn active" data-target="calc">Calculator</button>
+                    <button class="tab-btn" data-target="notes">Notes</button>
+                    <button class="tab-btn" data-target="speed">Internet</button>
+                    <button class="tab-btn" data-target="time">Time</button>
+                </nav>
+            </div>
+            <button id="close-btn" title="Close">✕</button>
+        </header>
 
+        <main id="panels">
+            <section id="panel-calc" class="panel active">
+                <div id="calculator">
+                    <input type="text" id="display" readonly>
 
-    <div id="calculator">
-        <input type="text" id="display" readonly>
-        <div id="buttons">
-            <button onclick="appendToDisplay('/')" class="operator-btn">/</button>
-            <button onclick="appendToDisplay('7')">7</button>
-            <button onclick="appendToDisplay('8')">8</button>
-            <button onclick="appendToDisplay('9')">9</button>
-            <button onclick="appendToDisplay('*')" class="operator-btn">x</button>
-            <button onclick="appendToDisplay('4')">4</button>
-            <button onclick="appendToDisplay('5')">5</button>
-            <button onclick="appendToDisplay('6')">6</button>
-            <button onclick="appendToDisplay('-')" class="operator-btn">-</button>
-            <button onclick="appendToDisplay('1')">1</button>
-            <button onclick="appendToDisplay('2')">2</button>
-            <button onclick="appendToDisplay('3')">3</button>
-            <button onclick="appendToDisplay('+')" class="operator-btn">+</button>
-            <button onclick="clearDisplay()">C</button>
-            <button onclick="appendToDisplay('0')">0</button>
-            <button onclick="appendToDisplay('.')">.</button>
-            <button onclick="calculateResult()" class="operator-btn equals-btn">ENTER</button>
-            
-    
+                    <div id="buttons">
+                        <!-- Function row -->
+                        <button class="operator-btn" onclick="percent()">%</button>
+                        <button class="operator-btn" onclick="squareLast()">x²</button>
+                        <button class="operator-btn" onclick="sqrtLast()">√</button>
+                        <button class="operator-btn" onclick="toggleSign()">+/-</button>
 
-        </div>
+                        <!-- Standard buttons -->
+                        <button class="operator-btn" onclick="appendToDisplay('/')">/</button>
+                        <button onclick="appendToDisplay('7')">7</button>
+                        <button onclick="appendToDisplay('8')">8</button>
+                        <button onclick="appendToDisplay('9')">9</button>
+
+                        <button class="operator-btn" onclick="appendToDisplay('x')">x</button>
+                        <button onclick="appendToDisplay('4')">4</button>
+                        <button onclick="appendToDisplay('5')">5</button>
+                        <button onclick="appendToDisplay('6')">6</button>
+
+                        <button class="operator-btn" onclick="appendToDisplay('-')">-</button>
+                        <button onclick="appendToDisplay('1')">1</button>
+                        <button onclick="appendToDisplay('2')">2</button>
+                        <button onclick="appendToDisplay('3')">3</button>
+
+                        <button class="operator-btn" onclick="appendToDisplay('+')">+</button>
+                        <button class="operator-btn" onclick="clearDisplay()">C</button>
+                        <button onclick="appendToDisplay('0')">0</button>
+                        <button onclick="appendToDisplay('.')">.</button>
+
+                        <button class="equals-btn operator-btn" onclick="calculateResult()">ENTER</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="panel-notes" class="panel">
+                <div class="panel-inner">
+                    <textarea id="notes" placeholder="Type notes here..."></textarea>
+                    <div class="notes-actions">
+                        <button id="clear-notes">Clear</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="panel-speed" class="panel">
+                <div class="panel-inner">
+                    <div class="speed-controls">
+                        <label>Endpoint: <input id="speed-endpoint" value="https://www.google.com/generate_204"></label>
+                        <button id="start-ping">Start</button>
+                        <button id="stop-ping" disabled>Stop</button>
+                        <button id="run-download">Run Speed Test</button>
+                        <div class="speed-stats">
+                            <div>Last: <span id="ping-last">-</span> ms</div>
+                            <div>Avg: <span id="ping-avg">-</span> ms</div>
+                            <div>Min: <span id="ping-min">-</span> ms</div>
+                            <div>Max: <span id="ping-max">-</span> ms</div>
+                        </div>
+                    </div>
+                    <canvas id="ping-canvas" width="600" height="120"></canvas>
+                    <div class="speed-meter">
+                        <div class="speed-bar" id="speed-bar">
+                            <div class="speed-fill" id="speed-fill"></div>
+                            <div class="avg-line" id="avg-line" title="Average"></div>
+                        </div>
+                        <div class="speed-info">
+                            <div class="speed-value" id="speed-value">- Mbps</div>
+                            <div class="speed-scale">0 — 1000 Mbps</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="panel-time" class="panel">
+                <div class="panel-inner time-panel">
+                    <div class="clock">Local time: <span id="local-time">--:--:--</span></div>
+
+                    <div class="timers">
+                        <div class="stopwatch">
+                            <div class="label">Stopwatch</div>
+                            <div class="display" id="sw-display">00:00.00</div>
+                            <div class="sw-controls">
+                                <button id="sw-start">Start</button>
+                                <button id="sw-stop" disabled>Stop</button>
+                                <button id="sw-reset">Reset</button>
+                            </div>
+                        </div>
+
+                        <div class="countdown">
+                            <div class="label">Countdown</div>
+                            <div class="display" id="cd-display">00:00</div>
+                            <div class="cd-inputs">
+                                <input type="number" id="cd-min" placeholder="min" min="0" value="0">
+                                <input type="number" id="cd-sec" placeholder="sec" min="0" max="59" value="10">
+                            </div>
+                            <div class="cd-controls">
+                                <button id="cd-start">Start</button>
+                                <button id="cd-stop" disabled>Stop</button>
+                                <button id="cd-reset">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
     </div>
+
     <script src="index.js"></script>
 </body>
 </html>
